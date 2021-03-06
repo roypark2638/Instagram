@@ -203,7 +203,46 @@ class LoginViewController: UIViewController {
         usernameEmailField.resignFirstResponder()
         
         guard let usernameEmail = usernameEmailField.text, !usernameEmail.isEmpty else { return }
-        guard let passwordField = passwordField.text, !passwordField.isEmpty, passwordField.count >= 8 else { return }
+        guard let password = passwordField.text, !password.isEmpty, password.count >= 8 else { return }
+        
+        // login functionality
+        
+        // find out if user put either email or username to log-in.
+        // we will imporve this later
+        var username: String?
+        var email: String?
+        
+        if usernameEmail.contains("@"), usernameEmail.contains(".") {
+            // email
+            email = usernameEmail
+        } else {
+            // username
+            username = usernameEmail
+        }
+        
+        
+        AuthManager.shared.loginUser(username: username, email: email, password: password) { success in
+            // this clouser is background thread, and we want to do UI work on the main thread.
+            DispatchQueue.main.async {
+                if success {
+                    // user logged in
+                    print("logged in")
+                    self.dismiss(animated: true, completion: nil)
+                }
+                else {
+                    // error
+                    print("error")
+                    let alert = UIAlertController(title: "Log In Error",
+                                                  message: "Something went wrong.",
+                                                  preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss",
+                                                  style: .cancel,
+                                                  handler: nil))
+                    self.present(alert, animated: true)
+                }
+            }
+            
+        }
     }
     
     @objc private func didTapCreatAccountButton() {
