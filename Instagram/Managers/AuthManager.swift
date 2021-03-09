@@ -12,6 +12,12 @@ public class AuthManager {
     
     // MARK: - Public
     
+    /// Attemp to register a new user from firebase database
+    /// - parameters
+    ///     username: String representing username
+    ///     email: String representing email
+    ///     password: String representing password
+    ///     completion: Async callback if firebase database successfully create and insert account into the database
     public func registerNewUser(username: String, email: String, password: String, completion: @escaping (Bool) -> Void) {
         /*
          - Check if username is available
@@ -52,6 +58,12 @@ public class AuthManager {
         }
     }
     
+    /// Attempt to log in firebase user
+    /// - parameters
+    ///     username: optional String representing username
+    ///     email: optional String representing email
+    ///     password: String representing password
+    ///     completion: Async callback for result if firebase successfully log in the user
     // the completion return Bool value. The bool represents if the user successfully signin or not
     public func loginUser(username: String?, email: String?, password: String, completion: @escaping (Bool) -> Void) {
         // the reason why using @escaping is we use completion isside of another closure and as teh re
@@ -80,4 +92,21 @@ public class AuthManager {
             }
         }
     }
+    
+    /// Attemp to log out firebase user
+    /// - parameters
+    ///     completion: Async callback for result if firebase successfully log out the user
+    public func logOut(completion: (Bool) -> Void) {
+        do {
+            try Auth.auth().signOut()
+            completion(true)
+            return
+        }
+        catch {
+            print(error)
+            completion(false)
+            return
+        }
+    }
+    
 }
