@@ -176,6 +176,8 @@ class RegistrationViewController: UIViewController {
             DispatchQueue.main.async {
                 // success to register an account
                 if registered {
+                    print("registered the account into firebase")
+                    self.dismiss(animated: true, completion: nil)
                     return
                 }
                 // failed to register an account
