@@ -6,11 +6,8 @@
 //
 
 import UIKit
+import SafariServices
 
-struct SettingsCellModel {
-    let title: String
-    let handler: (() -> Void)
-}
 
 // no other class can subclass this "final" class
 /// View Controller to show user settings
@@ -24,7 +21,7 @@ final class SettingsViewController: UIViewController {
         return tableView
     }()
     
-    private var data = [[SettingsCellModel]]() // 2d array for multiple sections
+    private var sections = [Section]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,14 +40,87 @@ final class SettingsViewController: UIViewController {
     }
     
     private func configureModels() {
-        let section = [
-            SettingsCellModel(title: "Log Out") { [weak self] in
+        sections.append(
+            Section(title: "Account", option: [
+                Option(title: "Edit Profile", handler: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.didTapEditProfile()
+                    }
+                }),
+                Option(title: "Invite Friends", handler: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.didTapInviteFriends()
+                    }
+                }),
+                Option(title: "Save Original Posts", handler: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.didTapSaveOriginalPosts()
+                    }
+                })
+            ]
+            ))
+        
+        sections.append(
+            Section(title: "Account", option: [
+                Option(title: "Terms of Service", handler: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.openURL(type: .terms)
+                    }
+                }),
+                Option(title: "Privacy Policy", handler: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.openURL(type: .privacy)
+                    }
+                }),
+                Option(title: "Help / Feedback", handler: { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.openURL(type: .help)
+                    }
+                })
+                
+            ]))
+        
+        sections.append(Section(title: "", option: [Option(title: "Log Out", handler: { [weak self] in
+            DispatchQueue.main.async {
                 self?.didTapLogOut()
             }
-        ]
+        })]))
         
-        data.append(section)
     }
+    enum SettingsURLType {
+        case terms, privacy, help
+    }
+    
+    private func openURL(type: SettingsURLType) {
+        let urlString: String
+        switch type {
+        case .terms: urlString = "https://help.instagram.com/1215086795543252"
+        case .privacy: urlString = "https://help.instagram.com/519522125107875"
+        case .help: urlString = "https://help.instagram.com/"
+        }
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true, completion: nil)
+    }
+    
+    private func didTapEditProfile() {
+        let vc = EditProfileViewController()
+        vc.title = "Edit Profile"
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true, completion: nil)
+    }
+    
+    private func didTapInviteFriends() {
+        // show share sheet to invite friends
+        
+    }
+    private func didTapSaveOriginalPosts() {
+        
+    }
+
+    
     
     private func didTapLogOut() {
         
@@ -86,7 +156,7 @@ final class SettingsViewController: UIViewController {
         }))
         
         // make sure it doesn't crash on the iPad
-        // if you don't assign this on iPad, the actionsheet doesn't know how to present itself
+        // if you don't assign this on iPad, the action sheet doesn't know how to present itself
         actionSheet.popoverPresentationController?.sourceView = tableView
         actionSheet.popoverPresentationController?.sourceRect = tableView.bounds
         
@@ -99,25 +169,31 @@ final class SettingsViewController: UIViewController {
 
 extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return data.count
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data[section].count
+        return sections[section].option.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = data[indexPath.section][indexPath.row].title
+        cell.textLabel?.text = sections[indexPath.section].option[indexPath.row].title
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // handle cell selection
-        let model = data[indexPath.section][indexPath.row]
+        let model = sections[indexPath.section].option[indexPath.row]
         model.handler()
     }
+    
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        let model = sections[section]
+//        return model.title
+//    }
     
 }
 
