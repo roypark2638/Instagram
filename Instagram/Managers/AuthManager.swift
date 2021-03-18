@@ -12,7 +12,7 @@ public class AuthManager {
     
     // MARK: - Public
     
-    /// Attemp to register a new user from firebase database
+    /// Attempt to register a new user from firebase database
     /// - parameters
     ///     username: String representing username
     ///     email: String representing email
@@ -64,9 +64,9 @@ public class AuthManager {
     ///     email: optional String representing email
     ///     password: String representing password
     ///     completion: Async callback for result if firebase successfully log in the user
-    // the completion return Bool value. The bool represents if the user successfully signin or not
+    // the completion return Bool value. The bool represents if the user successfully sign in or not
     public func loginUser(username: String?, email: String?, password: String, completion: @escaping (Bool) -> Void) {
-        // the reason why using @escaping is we use completion isside of another closure and as teh re
+        // the reason why using @escaping is we use completion inside of another closure
         if let email = email {
             // email log in
             Auth.auth().signIn(withEmail: email, password: password) { (authDataResult, error) in

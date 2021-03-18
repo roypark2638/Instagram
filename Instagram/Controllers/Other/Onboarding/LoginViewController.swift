@@ -96,7 +96,7 @@ class LoginViewController: UIViewController {
                               action: #selector(didTapLoginButton),
                               for: .touchUpInside)
         createAccountButton.addTarget(self,
-                                      action: #selector(didTapCreatAccountButton),
+                                      action: #selector(didTapCreateAccountButton),
                                       for: .touchUpInside)
         termsButton.addTarget(self,
                               action: #selector(didTapTermsButton),
@@ -208,7 +208,7 @@ class LoginViewController: UIViewController {
         // login functionality
         
         // find out if user put either email or username to log-in.
-        // we will imporve this later
+        // we will improve this later
         var username: String?
         var email: String?
         
@@ -245,7 +245,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc private func didTapCreatAccountButton() {
+    @objc private func didTapCreateAccountButton() {
         let vc = RegistrationViewController()
         vc.title = "Create Account"
         
