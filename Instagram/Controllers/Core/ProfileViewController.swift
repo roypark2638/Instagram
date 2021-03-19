@@ -135,7 +135,7 @@ extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataS
                           height: collectionView.height/3)
         }
         return CGSize(width: collectionView.width,
-                      height: 65)
+                      height: 50)
     }
     
 }

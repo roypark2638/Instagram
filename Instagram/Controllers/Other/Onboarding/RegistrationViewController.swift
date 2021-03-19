@@ -165,13 +165,13 @@ class RegistrationViewController: UIViewController {
         // Validate if user enter LEAST requirment for creating a new account.
         // More validation will be conducted from AuthManager Method "registerNewUser"
         guard let username = usernameField.text, !username.isEmpty,
-              let emailaddress = emailField.text, !emailaddress.isEmpty,
+              let emailAddress = emailField.text, !emailAddress.isEmpty,
               let password = passwordField.text, password.count >= 8 else {
             return
             
         }
         
-        AuthManager.shared.registerNewUser(username: username, email: emailaddress, password: password) { (registered) in
+        AuthManager.shared.registerNewUser(username: username, email: emailAddress, password: password) { (registered) in
             // we are going to update our UI so use DispatchQueue
             DispatchQueue.main.async {
                 // success to register an account
@@ -195,7 +195,7 @@ class RegistrationViewController: UIViewController {
 //MARK: Registration Extension -> UITextfieldDelegate
 extension RegistrationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // when user hit enter, it will excute the following code
+        // when user hit enter, it will execute the following code
         if textField == usernameField {
             emailField.becomeFirstResponder()
         }
